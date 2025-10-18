@@ -5,10 +5,10 @@ let currentRoom = null;
 let rooms = [];
 
 // API Base URL
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = 'http://localhost:8081/api';
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Check if user is already logged in
     const token = localStorage.getItem('token');
     if (token) {
@@ -23,10 +23,10 @@ function showTab(tabName) {
     // Hide all forms
     document.getElementById('login-form').style.display = 'none';
     document.getElementById('register-form').style.display = 'none';
-    
+
     // Remove active class from all tabs
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    
+
     // Show selected form and activate tab
     if (tabName === 'login') {
         document.getElementById('login-form').style.display = 'flex';
@@ -37,16 +37,38 @@ function showTab(tabName) {
     }
 }
 
+// Password toggle function
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const toggle = input.parentNode.querySelector('.password-toggle i');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        toggle.classList.remove('fa-eye');
+        toggle.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        toggle.classList.remove('fa-eye-slash');
+        toggle.classList.add('fa-eye');
+    }
+}
+
 async function register() {
     const username = document.getElementById('register-username').value;
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
-    
-    if (!username || !email || !password) {
+    const confirmPassword = document.getElementById('register-confirm-password').value;
+
+    if (!username || !email || !password || !confirmPassword) {
         alert('Please fill in all fields');
         return;
     }
-    
+
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE}/auth/register`, {
             method: 'POST',
@@ -55,9 +77,9 @@ async function register() {
             },
             body: JSON.stringify({ username, email, password })
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             alert('Registration successful! Please login.');
             showTab('login');
@@ -73,12 +95,12 @@ async function register() {
 async function login() {
     const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
-    
+
     if (!username || !password) {
         alert('Please fill in all fields');
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_BASE}/auth/login`, {
             method: 'POST',
@@ -87,14 +109,14 @@ async function login() {
             },
             body: JSON.stringify({ username, password })
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             localStorage.setItem('token', data.accessToken);
             currentUser = { username: data.username };
             localStorage.setItem('user', JSON.stringify(currentUser));
-            
+
             showChatSection();
             loadRooms();
         } else {
@@ -110,12 +132,12 @@ function logout() {
     localStorage.removeItem('user');
     currentUser = null;
     currentRoom = null;
-    
+
     if (stompClient) {
         stompClient.disconnect();
         stompClient = null;
     }
-    
+
     showAuthSection();
 }
 
@@ -127,6 +149,7 @@ function clearForm(formType) {
         document.getElementById('register-username').value = '';
         document.getElementById('register-email').value = '';
         document.getElementById('register-password').value = '';
+        document.getElementById('register-confirm-password').value = '';
     }
 }
 
@@ -151,24 +174,24 @@ async function loadRooms() {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        
+
         if (publicResponse.ok) {
             const publicRooms = await publicResponse.json();
             displayRooms(publicRooms, 'public-rooms');
         }
-        
+
         // Load user's rooms
         const myResponse = await fetch(`${API_BASE}/rooms/my`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        
+
         if (myResponse.ok) {
             const myRooms = await myResponse.json();
             displayRooms(myRooms, 'my-rooms');
         }
-        
+
         rooms = [...(await publicResponse.json()), ...(await myResponse.json())];
     } catch (error) {
         console.error('Error loading rooms:', error);
@@ -178,18 +201,18 @@ async function loadRooms() {
 function displayRooms(rooms, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    
+
     rooms.forEach(room => {
         const roomElement = document.createElement('div');
         roomElement.className = 'room-item';
         roomElement.onclick = () => selectRoom(room);
-        
+
         roomElement.innerHTML = `
             <h4>${room.name}</h4>
             <p>${room.description || 'No description'}</p>
             <small>${room.messageCount || 0} messages</small>
         `;
-        
+
         container.appendChild(roomElement);
     });
 }
@@ -203,25 +226,25 @@ async function selectRoom(room) {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        
+
         if (response.ok) {
             currentRoom = room;
-            
+
             // Update UI
             document.getElementById('no-room-selected').style.display = 'none';
             document.getElementById('chat-room').style.display = 'flex';
             document.getElementById('room-name').textContent = room.name;
-            
+
             // Update active room in sidebar
             document.querySelectorAll('.room-item').forEach(item => item.classList.remove('active'));
             event.target.closest('.room-item').classList.add('active');
-            
+
             // Connect to WebSocket
             connectWebSocket();
-            
+
             // Load messages
             loadMessages();
-            
+
             // Load participants
             loadParticipants();
         } else {
@@ -235,7 +258,7 @@ async function selectRoom(room) {
 
 async function leaveRoom() {
     if (!currentRoom) return;
-    
+
     try {
         const response = await fetch(`${API_BASE}/rooms/${currentRoom.id}/leave`, {
             method: 'POST',
@@ -243,20 +266,20 @@ async function leaveRoom() {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        
+
         if (response.ok) {
             // Disconnect WebSocket
             if (stompClient) {
                 stompClient.disconnect();
                 stompClient = null;
             }
-            
+
             // Reset UI
             currentRoom = null;
             document.getElementById('no-room-selected').style.display = 'flex';
             document.getElementById('chat-room').style.display = 'none';
             document.getElementById('messages').innerHTML = '';
-            
+
             // Remove active class
             document.querySelectorAll('.room-item').forEach(item => item.classList.remove('active'));
         }
@@ -271,14 +294,14 @@ async function searchRooms() {
         loadRooms();
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_BASE}/rooms/search?keyword=${encodeURIComponent(keyword)}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        
+
         if (response.ok) {
             const searchResults = await response.json();
             displayRooms(searchResults, 'public-rooms');
@@ -306,23 +329,23 @@ async function createRoom() {
     const description = document.getElementById('new-room-description').value;
     const isPrivate = document.getElementById('new-room-private').checked;
     const maxParticipants = document.getElementById('new-room-max-participants').value;
-    
+
     if (!name.trim()) {
         alert('Please enter a room name');
         return;
     }
-    
+
     try {
         const roomData = {
             name: name,
             description: description,
             isPrivate: isPrivate
         };
-        
+
         if (maxParticipants) {
             roomData.maxParticipants = parseInt(maxParticipants);
         }
-        
+
         const response = await fetch(`${API_BASE}/rooms`, {
             method: 'POST',
             headers: {
@@ -331,7 +354,7 @@ async function createRoom() {
             },
             body: JSON.stringify(roomData)
         });
-        
+
         if (response.ok) {
             const data = await response.json();
             alert('Room created successfully!');
@@ -349,14 +372,14 @@ async function createRoom() {
 // Message Functions
 async function loadMessages() {
     if (!currentRoom) return;
-    
+
     try {
         const response = await fetch(`${API_BASE}/messages/room/${currentRoom.id}?page=0&size=50`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        
+
         if (response.ok) {
             const messages = await response.json();
             displayMessages(messages.reverse()); // Show oldest first
@@ -369,12 +392,12 @@ async function loadMessages() {
 function displayMessages(messages) {
     const messagesContainer = document.getElementById('messages');
     messagesContainer.innerHTML = '';
-    
+
     messages.forEach(message => {
         const messageElement = createMessageElement(message);
         messagesContainer.appendChild(messageElement);
     });
-    
+
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
@@ -383,11 +406,11 @@ function createMessageElement(message) {
     const messageDiv = document.createElement('div');
     const isOwnMessage = message.username === currentUser.username;
     const isSystemMessage = message.messageType === 'SYSTEM';
-    
+
     messageDiv.className = `message ${isOwnMessage ? 'own' : ''} ${isSystemMessage ? 'system' : ''}`;
-    
+
     const time = new Date(message.createdAt).toLocaleTimeString();
-    
+
     messageDiv.innerHTML = `
         <div class="message-content">
             <div class="message-header">
@@ -397,7 +420,7 @@ function createMessageElement(message) {
             <div class="message-text">${message.content}</div>
         </div>
     `;
-    
+
     return messageDiv;
 }
 
@@ -410,14 +433,14 @@ function handleMessageKeyPress(event) {
 function sendMessage() {
     const messageInput = document.getElementById('message-input');
     const content = messageInput.value.trim();
-    
+
     if (!content || !currentRoom) return;
-    
+
     const message = {
         content: content,
         roomId: currentRoom.id
     };
-    
+
     if (stompClient && stompClient.connected) {
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
         messageInput.value = '';
@@ -426,17 +449,17 @@ function sendMessage() {
 
 async function loadParticipants() {
     if (!currentRoom) return;
-    
+
     try {
         const response = await fetch(`${API_BASE}/rooms/${currentRoom.id}/participants`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        
+
         if (response.ok) {
             const participants = await response.json();
-            document.getElementById('room-participants').textContent = 
+            document.getElementById('room-participants').textContent =
                 `${participants.length} participant${participants.length !== 1 ? 's' : ''}`;
         }
     } catch (error) {
@@ -448,34 +471,34 @@ async function loadParticipants() {
 function connectWebSocket() {
     const socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
-    
-    stompClient.connect({}, function(frame) {
+
+    stompClient.connect({}, function (frame) {
         console.log('Connected to WebSocket');
-        
+
         // Subscribe to room messages
-        stompClient.subscribe(`/topic/room.${currentRoom.id}`, function(message) {
+        stompClient.subscribe(`/topic/room.${currentRoom.id}`, function (message) {
             const receivedMessage = JSON.parse(message.body);
             const messageElement = createMessageElement(receivedMessage);
             document.getElementById('messages').appendChild(messageElement);
-            
+
             // Scroll to bottom
             const messagesContainer = document.getElementById('messages');
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
-        
+
         // Send join message
         const joinMessage = {
             username: currentUser.username,
             roomId: currentRoom.id
         };
         stompClient.send("/app/chat.addUser", {}, JSON.stringify(joinMessage));
-    }, function(error) {
+    }, function (error) {
         console.error('WebSocket connection error:', error);
     });
 }
 
 // Event listeners
-window.addEventListener('beforeunload', function() {
+window.addEventListener('beforeunload', function () {
     if (stompClient && stompClient.connected) {
         stompClient.send("/app/chat.leaveUser", {}, JSON.stringify({}));
     }

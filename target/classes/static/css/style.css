@@ -119,6 +119,38 @@ body {
     color: #000000;
 }
 
+/* Password Container */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 50px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #000000;
+    font-size: 16px;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #666666;
+}
+
+.password-toggle i {
+    pointer-events: none;
+}
+
 /* Chat Section */
 .chat-container {
     height: 100vh;
