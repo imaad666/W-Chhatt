@@ -12,6 +12,36 @@ body {
     color: #ffffff;
 }
 
+/* Reusable Glassmorphism Effect - Dark Variant */
+.glass-dark {
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.glass-dark:hover,
+.glass-dark:focus {
+    background: rgba(0, 0, 0, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Reusable Glassmorphism Effect - Light Variant */
+.glass-light {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.glass-light:hover,
+.glass-light:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
+}
+
 /* Auth Section */
 .auth-container {
     position: relative;
@@ -112,6 +142,16 @@ body {
     letter-spacing: -1px;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.logo-img {
+    height: 60px;
+    width: auto;
+    filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.3));
 }
 
 /* Bottom Auth Buttons */
@@ -133,12 +173,14 @@ body {
     font-size: 14px;
     font-weight: 300;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     text-transform: lowercase;
+    text-shadow: 0 0 0px rgba(255, 255, 255, 0);
 }
 
 .auth-link:hover {
     color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
 }
 
 .separator {
@@ -183,9 +225,9 @@ body {
 /* Auth Forms */
 .auth-form {
     position: fixed;
-    top: 50%;
+    bottom: 80px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     z-index: 2;
     display: flex;
     flex-direction: column;
@@ -197,42 +239,46 @@ body {
 /* Minimal Input Styles */
 .minimal-input {
     padding: 12px 15px !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
     font-size: 14px !important;
     transition: all 0.3s ease !important;
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(0, 0, 0, 0.3) !important;
     color: #ffffff !important;
-    backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(15px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
 .minimal-input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .minimal-input:focus {
     outline: none !important;
-    border-color: rgba(255, 255, 255, 0.8) !important;
-    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
 }
 
 .minimal-btn {
     padding: 12px 20px !important;
-    background: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    border-radius: 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
     font-size: 14px !important;
     font-weight: 300 !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
-    backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(15px) !important;
     text-transform: lowercase !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
 .minimal-btn:hover {
-    background: rgba(255, 255, 255, 0.3) !important;
-    border-color: rgba(255, 255, 255, 0.8) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
 }
 
 .auth-form input {
