@@ -218,15 +218,15 @@ body {
 
 /* User Profile Menu */
 .user-profile-menu {
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 80px;
     left: 30px;
     background: #ffffff;
     color: #000000;
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     min-width: 280px;
-    z-index: 1000;
+    z-index: 9999;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);

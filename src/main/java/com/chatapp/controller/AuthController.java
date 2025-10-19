@@ -74,10 +74,26 @@ public class AuthController {
             // Update last login
             userService.updateLastLogin(loginRequest.getUsername());
             
+            // Get user details
+            UserDto userDto = userService.findByUsername(loginRequest.getUsername())
+                    .map(user -> {
+                        UserDto dto = new UserDto();
+                        dto.setId(user.getId());
+                        dto.setUsername(user.getUsername());
+                        dto.setEmail(user.getEmail());
+                        dto.setCreatedAt(user.getCreatedAt());
+                        dto.setLastLogin(user.getLastLogin());
+                        dto.setActive(user.isActive());
+                        return dto;
+                    })
+                    .orElse(null);
+            
             Map<String, Object> response = new HashMap<>();
             response.put("accessToken", jwt);
             response.put("tokenType", "Bearer");
             response.put("username", loginRequest.getUsername());
+            response.put("email", userDto != null ? userDto.getEmail() : null);
+            response.put("createdAt", userDto != null ? userDto.getCreatedAt() : null);
             
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {

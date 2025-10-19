@@ -114,7 +114,11 @@ async function login() {
 
         if (response.ok) {
             localStorage.setItem('token', data.accessToken);
-            currentUser = { username: data.username };
+            currentUser = { 
+                username: data.username,
+                email: data.email,
+                createdAt: data.createdAt
+            };
             localStorage.setItem('user', JSON.stringify(currentUser));
 
             showChatSection();
@@ -160,9 +164,22 @@ function showAuthSection() {
 }
 
 function showChatSection() {
+    console.log('showChatSection called');
+    console.log('currentUser:', currentUser);
+
     document.getElementById('auth-section').style.display = 'none';
     document.getElementById('chat-section').style.display = 'flex';
-    document.getElementById('current-user').textContent = currentUser.username;
+
+    const currentUserElement = document.getElementById('current-user');
+    console.log('currentUserElement:', currentUserElement);
+
+    if (currentUser && currentUser.username) {
+        currentUserElement.textContent = currentUser.username;
+        console.log('Set username to:', currentUser.username);
+    } else {
+        console.log('No currentUser or username found');
+        currentUserElement.textContent = 'User';
+    }
 }
 
 // Room Functions
@@ -517,14 +534,22 @@ function toggleUserProfile() {
     if (menu.classList.contains('show')) {
         menu.classList.remove('show');
         btn.classList.remove('active');
+        console.log('Menu closed');
     } else {
         menu.classList.add('show');
         btn.classList.add('active');
+        console.log('Menu opened');
+
         // Populate profile info
         if (currentUser) {
             document.getElementById('profile-username').textContent = currentUser.username;
             document.getElementById('profile-email').textContent = currentUser.email || 'No email provided';
         }
+
+        // Debug menu position
+        const rect = menu.getBoundingClientRect();
+        console.log('Menu position:', rect);
+        console.log('Menu computed style:', window.getComputedStyle(menu));
     }
 }
 
