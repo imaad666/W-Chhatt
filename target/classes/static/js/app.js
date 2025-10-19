@@ -9,6 +9,24 @@ const API_BASE = 'http://localhost:8080/api';
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
+    // Split title into individual letters for hover effect
+    const titleText = document.getElementById('title-text');
+    if (titleText) {
+        const text = titleText.textContent;
+        titleText.innerHTML = '';
+        for (let i = 0; i < text.length; i++) {
+            const letter = text[i];
+            const span = document.createElement('span');
+            span.className = 'letter';
+            span.textContent = letter;
+            // Preserve spaces
+            if (letter === ' ') {
+                span.style.marginRight = '0.3em';
+            }
+            titleText.appendChild(span);
+        }
+    }
+
     // Handle video background as a proper background component
     const video = document.getElementById('bg-video');
     if (video) {
