@@ -9,6 +9,26 @@ const API_BASE = 'http://localhost:8080/api';
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
+    // Handle video background audio (some browsers block autoplay with audio)
+    const video = document.getElementById('bg-video');
+    if (video) {
+        // Try to play with audio
+        video.play().catch(() => {
+            // If autoplay with audio fails, mute and play
+            video.muted = true;
+            video.play();
+            updateMuteButton(true);
+
+            // Unmute on first user interaction
+            document.addEventListener('click', function unmute() {
+                video.muted = false;
+                video.play();
+                updateMuteButton(false);
+                document.removeEventListener('click', unmute);
+            }, { once: true });
+        });
+    }
+
     // Check if user is already logged in
     const token = localStorage.getItem('token');
     if (token) {
@@ -17,6 +37,30 @@ document.addEventListener('DOMContentLoaded', function () {
         loadRooms();
     }
 });
+
+// Mute Button Functions
+function toggleMute() {
+    const video = document.getElementById('bg-video');
+    const muteBtn = document.getElementById('mute-btn');
+
+    if (video) {
+        video.muted = !video.muted;
+        updateMuteButton(video.muted);
+    }
+}
+
+function updateMuteButton(isMuted) {
+    const muteBtn = document.getElementById('mute-btn');
+    const icon = muteBtn.querySelector('i');
+
+    if (isMuted) {
+        muteBtn.classList.add('muted');
+        icon.className = 'fas fa-volume-mute';
+    } else {
+        muteBtn.classList.remove('muted');
+        icon.className = 'fas fa-volume-up';
+    }
+}
 
 // Authentication Functions
 function showTab(tabName) {
@@ -114,7 +158,7 @@ async function login() {
 
         if (response.ok) {
             localStorage.setItem('token', data.accessToken);
-            currentUser = { 
+            currentUser = {
                 username: data.username,
                 email: data.email,
                 createdAt: data.createdAt

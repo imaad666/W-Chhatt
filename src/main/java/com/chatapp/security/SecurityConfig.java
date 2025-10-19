@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/index.html").permitAll()
                 .requestMatchers("/css/**").permitAll()
                 .requestMatchers("/js/**").permitAll()
+                .requestMatchers("/assets/**").permitAll()
                 .anyRequest().authenticated()
             )
             .headers().frameOptions().disable(); // For H2 console
