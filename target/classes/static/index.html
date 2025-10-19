@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>W Chhatt</title>
-    <link rel="stylesheet" href="css/style.css?v=2">
+    <link rel="stylesheet" href="css/style.css?v=3">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -25,12 +25,15 @@
 
             <!-- Mute Button -->
             <button id="mute-btn" class="mute-btn" onclick="toggleMute()">
-                <i class="fas fa-volume-up"></i>
+                <span id="mute-text">mute</span>
             </button>
 
             <!-- Center Title -->
             <div class="center-title">
-                <h1 class="main-title"><img src="assets/logo.png" alt="W Chhatt" class="logo-img"> W Chhatt</h1>
+                <h1 class="main-title">
+                    <img src="assets/logo.png" alt="W Chhatt" class="logo-img">
+                    <span class="title-text" id="title-text">W Chhatt</span>
+                </h1>
             </div>
 
             <!-- Bottom Auth Buttons -->

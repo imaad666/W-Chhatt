@@ -81,14 +81,11 @@ function toggleMute() {
 
 function updateMuteButton(isMuted) {
     const muteBtn = document.getElementById('mute-btn');
-    const icon = muteBtn.querySelector('i');
 
     if (isMuted) {
         muteBtn.classList.add('muted');
-        icon.className = 'fas fa-volume-mute';
     } else {
         muteBtn.classList.remove('muted');
-        icon.className = 'fas fa-volume-up';
     }
 }
 

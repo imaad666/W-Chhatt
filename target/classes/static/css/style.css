@@ -1,3 +1,10 @@
+/* ========================================
+   W CHHATT - MAIN STYLESHEET
+   ======================================== */
+
+/* Import Glassmorphism Effects Library */
+@import url('../assets/glass-effects.css');
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -10,36 +17,6 @@ body {
     background: #000000;
     min-height: 100vh;
     color: #ffffff;
-}
-
-/* Reusable Glassmorphism Effect - Dark Variant */
-.glass-dark {
-    background: rgba(0, 0, 0, 0.3) !important;
-    backdrop-filter: blur(15px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-}
-
-.glass-dark:hover,
-.glass-dark:focus {
-    background: rgba(0, 0, 0, 0.4) !important;
-    border-color: rgba(255, 255, 255, 0.6) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
-}
-
-/* Reusable Glassmorphism Effect - Light Variant */
-.glass-light {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(15px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-}
-
-.glass-light:hover,
-.glass-light:focus {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-color: rgba(255, 255, 255, 0.6) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Auth Section */
@@ -94,35 +71,31 @@ body {
     background-position: 0 0, 50px 50px, 100px 100px, 150px 150px, 200px 200px, 250px 250px;
 }
 
-/* Mute Button */
+/* Mute Button - Matches Auth Button Style */
 .mute-btn {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 300;
     cursor: pointer;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    text-transform: lowercase;
+    text-shadow: 0 0 0px rgba(255, 255, 255, 0);
     z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
+    padding: 0;
 }
 
 .mute-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.8);
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
 }
 
-.mute-btn.muted {
-    background: rgba(255, 0, 0, 0.3);
-    border-color: rgba(255, 0, 0, 0.6);
+.mute-btn.muted #mute-text {
+    text-decoration: line-through;
 }
 
 /* Center Title */
@@ -236,11 +209,11 @@ body {
     text-align: center;
 }
 
-/* Minimal Input Styles */
+/* Minimal Input Styles - Edgy & Boxy */
 .minimal-input {
     padding: 12px 15px !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 8px !important;
+    border-radius: 0 !important;
     font-size: 14px !important;
     transition: all 0.3s ease !important;
     background: rgba(0, 0, 0, 0.3) !important;
@@ -265,7 +238,7 @@ body {
     background: rgba(0, 0, 0, 0.4) !important;
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 8px !important;
+    border-radius: 0 !important;
     font-size: 14px !important;
     font-weight: 300 !important;
     cursor: pointer !important;
@@ -385,11 +358,11 @@ body {
 
 /* User Profile Button */
 .user-profile-btn {
-    background: #ffffff;
-    color: #000000;
-    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 10px 16px;
-    border-radius: 25px;
+    border-radius: 0;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -397,11 +370,14 @@ body {
     align-items: center;
     gap: 8px;
     transition: all 0.2s ease;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .user-profile-btn:hover {
-    background: #f0f0f0;
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 .user-profile-btn i.fa-chevron-down {
@@ -418,10 +394,12 @@ body {
     position: fixed;
     top: 80px;
     left: 30px;
-    background: #ffffff;
-    color: #000000;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
     min-width: 280px;
     z-index: 9999;
     opacity: 0;
@@ -438,7 +416,7 @@ body {
 
 .profile-header {
     padding: 20px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     gap: 15px;
@@ -447,9 +425,10 @@ body {
 .profile-avatar {
     width: 50px;
     height: 50px;
-    background: #000000;
+    background: rgba(255, 255, 255, 0.1);
     color: #ffffff;
-    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -460,12 +439,13 @@ body {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 600;
+    color: #ffffff;
 }
 
 .profile-info p {
     margin: 4px 0 0 0;
     font-size: 0.9rem;
-    color: #666666;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .profile-menu-items {
@@ -483,12 +463,13 @@ body {
     align-items: center;
     gap: 12px;
     font-size: 0.95rem;
-    color: #000000;
-    transition: background-color 0.2s ease;
+    color: #ffffff;
+    transition: all 0.2s ease;
 }
 
 .profile-menu-item:hover {
-    background: #f5f5f5;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid #ffffff;
 }
 
 .profile-menu-item i {
@@ -543,18 +524,20 @@ body {
     border-radius: 0;
     cursor: pointer;
     transition: all 0.3s ease;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .room-item:hover {
     background: #000000;
     color: #ffffff;
     transform: translateX(3px);
+    border-left: 4px solid #ffffff;
 }
 
 .room-item.active {
     background: #000000;
     color: #ffffff;
+    border-left: 4px solid #ffffff;
 }
 
 .room-item h4 {
