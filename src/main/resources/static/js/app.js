@@ -5,7 +5,7 @@ let currentRoom = null;
 let rooms = [];
 
 // API Base URL
-const API_BASE = 'http://localhost:8081/api';
+const API_BASE = 'http://localhost:8080/api';
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
@@ -501,5 +501,52 @@ function connectWebSocket() {
 window.addEventListener('beforeunload', function () {
     if (stompClient && stompClient.connected) {
         stompClient.send("/app/chat.leaveUser", {}, JSON.stringify({}));
+    }
+});
+
+// User Profile Functions
+function toggleUserProfile() {
+    console.log('toggleUserProfile called');
+    const menu = document.getElementById('user-profile-menu');
+    const btn = document.getElementById('user-profile-btn');
+
+    console.log('Menu element:', menu);
+    console.log('Button element:', btn);
+    console.log('Current user:', currentUser);
+
+    if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+        btn.classList.remove('active');
+    } else {
+        menu.classList.add('show');
+        btn.classList.add('active');
+        // Populate profile info
+        if (currentUser) {
+            document.getElementById('profile-username').textContent = currentUser.username;
+            document.getElementById('profile-email').textContent = currentUser.email || 'No email provided';
+        }
+    }
+}
+
+function showProfileSettings() {
+    // Close the menu first
+    toggleUserProfile();
+    alert('Profile settings coming soon!');
+}
+
+function showProfileInfo() {
+    // Close the menu first
+    toggleUserProfile();
+    alert(`Username: ${currentUser.username}\nEmail: ${currentUser.email || 'No email provided'}\nMember since: ${new Date(currentUser.createdAt).toLocaleDateString()}`);
+}
+
+// Close profile menu when clicking outside
+document.addEventListener('click', function (event) {
+    const menu = document.getElementById('user-profile-menu');
+    const btn = document.getElementById('user-profile-btn');
+
+    if (menu && !menu.contains(event.target) && !btn.contains(event.target)) {
+        menu.classList.remove('show');
+        btn.classList.remove('active');
     }
 }); 
