@@ -9,23 +9,42 @@ const API_BASE = 'http://localhost:8080/api';
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
-    // Handle video background audio (some browsers block autoplay with audio)
+    // Handle video background as a proper background component
     const video = document.getElementById('bg-video');
     if (video) {
-        // Try to play with audio
-        video.play().catch(() => {
-            // If autoplay with audio fails, mute and play
-            video.muted = true;
-            video.play();
-            updateMuteButton(true);
+        // Set video properties to prevent tab switching issues
+        video.muted = true; // Start muted to avoid autoplay restrictions
+        video.loop = true;
+        video.playsInline = true;
+        video.preload = 'auto';
 
-            // Unmute on first user interaction
-            document.addEventListener('click', function unmute() {
+        // Play the video immediately (muted)
+        video.play().catch(() => {
+            console.log('Video autoplay blocked, will play on user interaction');
+        });
+
+        // Unmute on first user interaction
+        document.addEventListener('click', function unmute() {
+            if (video.muted) {
                 video.muted = false;
-                video.play();
                 updateMuteButton(false);
                 document.removeEventListener('click', unmute);
-            }, { once: true });
+            }
+        }, { once: true });
+
+        // Handle visibility change to prevent tab switching issues
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                // Tab is hidden, pause video
+                video.pause();
+            } else {
+                // Tab is visible, resume video
+                video.play().catch(() => {
+                    // If play fails, try muted
+                    video.muted = true;
+                    video.play();
+                });
+            }
         });
     }
 
@@ -36,6 +55,17 @@ document.addEventListener('DOMContentLoaded', function () {
         showChatSection();
         loadRooms();
     }
+
+    // Close auth forms when clicking outside
+    document.addEventListener('click', function (event) {
+        const authForm = event.target.closest('.auth-form');
+        const bottomAuth = event.target.closest('.bottom-auth');
+        const muteBtn = event.target.closest('.mute-btn');
+
+        if (!authForm && !bottomAuth && !muteBtn) {
+            hideAuthForm();
+        }
+    });
 });
 
 // Mute Button Functions
@@ -63,22 +93,29 @@ function updateMuteButton(isMuted) {
 }
 
 // Authentication Functions
-function showTab(tabName) {
+function showAuthForm(formType) {
+    // Hide all forms first
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'none';
+
+    // Hide bottom auth buttons
+    document.querySelector('.bottom-auth').style.display = 'none';
+
+    // Show selected form
+    if (formType === 'login') {
+        document.getElementById('login-form').style.display = 'flex';
+    } else if (formType === 'register') {
+        document.getElementById('register-form').style.display = 'flex';
+    }
+}
+
+function hideAuthForm() {
     // Hide all forms
     document.getElementById('login-form').style.display = 'none';
     document.getElementById('register-form').style.display = 'none';
 
-    // Remove active class from all tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-    // Show selected form and activate tab
-    if (tabName === 'login') {
-        document.getElementById('login-form').style.display = 'flex';
-        document.querySelector('.tab-btn:first-child').classList.add('active');
-    } else {
-        document.getElementById('register-form').style.display = 'flex';
-        document.querySelector('.tab-btn:last-child').classList.add('active');
-    }
+    // Show bottom auth buttons
+    document.querySelector('.bottom-auth').style.display = 'flex';
 }
 
 // Password toggle function
