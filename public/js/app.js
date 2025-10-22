@@ -5,8 +5,9 @@ let currentRoom = null;
 let rooms = [];
 
 // API Base URL - Update this to your actual backend URL when deployed
+// Replace 'your-backend-url.com' with your actual deployed backend URL (Railway, Render, Heroku, etc.)
 const API_BASE = window.location.origin.includes('vercel.app') 
-    ? 'https://your-backend-url.com/api'  // Replace with your actual backend URL
+    ? 'https://your-backend-url.com/api'  // TODO: Replace with your actual backend URL
     : 'http://localhost:8080/api';
 
 // Initialize the application
@@ -585,7 +586,7 @@ async function loadParticipants() {
 // WebSocket Functions
 function connectWebSocket() {
     const wsUrl = window.location.origin.includes('vercel.app') 
-        ? 'https://your-backend-url.com/ws'  // Replace with your actual backend WebSocket URL
+        ? 'https://your-backend-url.com/ws'  // TODO: Replace with your actual backend WebSocket URL
         : '/ws';
     const socket = new SockJS(wsUrl);
     stompClient = Stomp.over(socket);
