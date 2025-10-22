@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>W Chhatt</title>
+    <link rel="stylesheet" href="css/style.css?v=3">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Login/Register Section -->
+        <div id="auth-section" class="auth-container">
+            <!-- Video Background -->
+            <video muted loop playsinline class="video-background" id="bg-video">
+                <source src="assets/bg_W_CHHATT.mp4?v=1" type="video/mp4">
+            </video>
+
+            <!-- Grainy Texture Overlay -->
+            <div class="grain-overlay"></div>
+
+            <!-- Mute Button -->
+            <button id="mute-btn" class="mute-btn" onclick="toggleMute()">
+                <span id="mute-text">mute</span>
+            </button>
+
+            <!-- Center Title -->
+            <div class="center-title">
+                <h1 class="main-title">
+                    <img src="assets/logo.png" alt="W Chhatt" class="logo-img">
+                    <span class="title-text" id="title-text">W Chhatt</span>
+                </h1>
+            </div>
+
+            <!-- Bottom Auth Buttons -->
+            <div class="bottom-auth">
+                <button class="auth-link" onclick="showAuthForm('login')">login</button>
+                <span class="separator">|</span>
+                <button class="auth-link" onclick="showAuthForm('register')">register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form" style="display: none;">
+                <input type="text" id="login-username" class="minimal-input" placeholder="Username" required>
+                <div class="password-container">
+                    <input type="password" id="login-password" class="minimal-input" placeholder="Password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('login-password')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <button onclick="login()" class="minimal-btn">Login</button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form" style="display: none;">
+                <input type="text" id="register-username" class="minimal-input" placeholder="Username" required>
+                <input type="email" id="register-email" class="minimal-input" placeholder="Email" required>
+                <div class="password-container">
+                    <input type="password" id="register-password" class="minimal-input" placeholder="Password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('register-password')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="password-container">
+                    <input type="password" id="register-confirm-password" class="minimal-input"
+                        placeholder="Confirm Password" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('register-confirm-password')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <button onclick="register()" class="minimal-btn">Register</button>
+            </div>
+        </div>
+
+        <!-- Chat Section (existing chat HTML from your original file) -->
+        <!-- Note: Your backend needs to be running for chat to work -->
+        <div id="chat-section" class="chat-container" style="display: none;">
+            <div class="chat-header">
+                <div class="header-left">
+                    <button id="user-profile-btn" class="user-profile-btn" onclick="toggleUserProfile()">
+                        <i class="fas fa-user"></i>
+                        <span id="current-user"></span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+
+                    <!-- User Profile Menu -->
+                    <div id="user-profile-menu" class="user-profile-menu">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="profile-info">
+                                <h3 id="profile-username"></h3>
+                                <p id="profile-email">No email provided</p>
+                                <p style="font-size: 0.8rem; margin-top: 8px;">Member since: <span
+                                        id="profile-date">Unknown</span></p>
+                            </div>
+                        </div>
+                        <div class="profile-menu-items">
+                            <button class="profile-menu-item" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <h2><i class="fas fa-comments"></i> W Chhatt</h2>
+                </div>
+            </div>
+            <div class="chat-main">
+                <aside class="chat-sidebar">
+                    <div class="sidebar-section">
+                        <h3>Rooms</h3>
+                        <input type="text" id="room-search" placeholder="Search rooms...">
+                        <div id="room-list" class="room-list"></div>
+                    </div>
+                </aside>
+                <main class="chat-area">
+                    <div id="no-room" class="no-room">
+                        <i class="fas fa-comments"></i>
+                        <h3>Select a room to start chatting</h3>
+                        <p>Choose from your existing rooms or create a new one</p>
+                    </div>
+                    <div id="chat-room" class="chat-room" style="display: none;">
+                        <div class="room-header">
+                            <div class="room-info">
+                                <h3 id="current-room-name"></h3>
+                                <span id="room-participants"></span>
+                            </div>
+                            <button onclick="leaveRoom()" class="leave-btn">
+                                <i class="fas fa-sign-out-alt"></i> Leave Room
+                            </button>
+                        </div>
+                        <div id="chat-messages" class="chat-messages"></div>
+                        <div class="message-input-container">
+                            <input type="text" id="message-input" placeholder="Type your message..."
+                                onkeypress="handleMessageKeyPress(event)">
+                            <button onclick="sendMessage()" class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
