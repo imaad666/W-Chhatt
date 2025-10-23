@@ -17,6 +17,15 @@ body {
     background: #000000;
     min-height: 100vh;
     color: #ffffff;
+    /* Mobile optimizations */
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow-x: hidden;
 }
 
 /* Auth Section */
@@ -241,6 +250,12 @@ body {
     color: #ffffff !important;
     backdrop-filter: blur(15px) !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    /* Mobile optimizations */
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    -webkit-tap-highlight-color: transparent;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .minimal-input::placeholder {
@@ -267,6 +282,12 @@ body {
     backdrop-filter: blur(15px) !important;
     text-transform: lowercase !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    /* Mobile optimizations */
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+    min-height: 44px; /* Minimum touch target size */
 }
 
 .minimal-btn:hover {
@@ -728,6 +749,11 @@ body {
 .message-text {
     font-size: 14px;
     line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
 }
 
 .message-input {
@@ -903,11 +929,51 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* Auth Section Mobile */
+    .main-title {
+        font-size: 2rem;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .logo-img {
+        height: 40px;
+    }
+    
+    .auth-form {
+        width: 90%;
+        max-width: 320px;
+        bottom: 60px;
+    }
+    
+    .minimal-input {
+        padding: 10px 12px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    .minimal-btn {
+        padding: 10px 16px !important;
+        font-size: 16px !important;
+    }
+    
+    .bottom-auth {
+        bottom: 20px;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .mute-btn {
+        top: 15px;
+        right: 15px;
+        font-size: 12px;
+    }
+    
+    /* Chat Section Mobile */
     .chat-sidebar {
         width: 250px;
     }
 
-    .header-left h2 {
+    .header-right h2 {
         font-size: 1.2rem;
     }
 
@@ -923,9 +989,65 @@ body {
         width: 95%;
         margin: 20px;
     }
+    
+    .user-profile-menu {
+        left: 15px;
+        right: 15px;
+        min-width: auto;
+        max-width: calc(100vw - 30px);
+    }
 }
 
 @media (max-width: 576px) {
+    /* Auth Section Mobile */
+    .main-title {
+        font-size: 1.5rem;
+        gap: 8px;
+    }
+    
+    .logo-img {
+        height: 35px;
+    }
+    
+    .auth-form {
+        width: 95%;
+        max-width: 300px;
+        bottom: 50px;
+        gap: 12px;
+    }
+    
+    .minimal-input {
+        padding: 12px 14px !important;
+        font-size: 16px !important;
+        border-radius: 0 !important;
+    }
+    
+    .minimal-btn {
+        padding: 12px 18px !important;
+        font-size: 16px !important;
+    }
+    
+    .password-toggle {
+        right: 8px;
+        font-size: 14px;
+    }
+    
+    .bottom-auth {
+        bottom: 15px;
+        gap: 8px;
+    }
+    
+    .auth-link {
+        font-size: 13px;
+    }
+    
+    .mute-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 11px;
+    }
+    
+    /* Chat Section Mobile */
     .chat-main {
         flex-direction: column;
     }
@@ -933,19 +1055,135 @@ body {
     .chat-sidebar {
         width: 100%;
         height: 200px;
+        border-right: none;
+        border-bottom: 2px solid #000000;
     }
 
     .chat-header {
         padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .header-right {
         flex-direction: column;
         gap: 5px;
     }
+    
+    .header-right h2 {
+        font-size: 1rem;
+    }
 
     .btn {
         padding: 6px 12px;
         font-size: 12px;
+    }
+    
+    .user-profile-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .user-profile-menu {
+        top: 70px;
+        left: 10px;
+        right: 10px;
+        min-width: auto;
+    }
+    
+    .message {
+        max-width: 85%;
+    }
+    
+    .message-input {
+        padding: 10px 15px;
+    }
+    
+    .message-input input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small screens */
+    .main-title {
+        font-size: 1.3rem;
+    }
+    
+    .logo-img {
+        height: 30px;
+    }
+    
+    .auth-form {
+        width: 98%;
+        max-width: 280px;
+        bottom: 40px;
+    }
+    
+    .minimal-input {
+        padding: 10px 12px !important;
+        font-size: 16px !important;
+    }
+    
+    .minimal-btn {
+        padding: 10px 16px !important;
+        font-size: 16px !important;
+    }
+    
+    .chat-header {
+        padding: 8px 12px;
+    }
+    
+    .header-right h2 {
+        font-size: 0.9rem;
+    }
+    
+    .room-header {
+        padding: 12px 15px;
+    }
+    
+    .room-header h3 {
+        font-size: 1rem;
+    }
+    
+    .message-input {
+        padding: 8px 12px;
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 10px;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 15px 20px;
+    }
+}
+
+/* Landscape mobile orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+    .main-title {
+        font-size: 1.8rem;
+        flex-direction: row;
+    }
+    
+    .logo-img {
+        height: 35px;
+    }
+    
+    .auth-form {
+        bottom: 30px;
+        width: 80%;
+        max-width: 400px;
+    }
+    
+    .bottom-auth {
+        bottom: 15px;
+    }
+    
+    .chat-sidebar {
+        width: 200px;
     }
 }
