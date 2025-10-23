@@ -23,9 +23,9 @@ This guide will help you deploy your chat application to make it fully functiona
 
 ```
 SPRING_PROFILES_ACTIVE=production
-DATABASE_URL=jdbc:postgresql://db.zanyzzhtrlztyqytyjem.supabase.co:5432/postgres
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=I@mmwchhatt6969
+DATABASE_URL=your-database-url-here
+DATABASE_USERNAME=your-database-username
+DATABASE_PASSWORD=your-database-password
 JWT_SECRET=your-super-secret-jwt-key-here
 CORS_ALLOWED_ORIGINS=https://your-vercel-app.vercel.app
 ```
@@ -71,9 +71,9 @@ heroku create your-app-name
 
 # Set environment variables
 heroku config:set SPRING_PROFILES_ACTIVE=production
-heroku config:set DATABASE_URL=jdbc:postgresql://db.zanyzzhtrlztyqytyjem.supabase.co:5432/postgres
-heroku config:set DATABASE_USERNAME=postgres
-heroku config:set DATABASE_PASSWORD=I@mmwchhatt6969
+heroku config:set DATABASE_URL=your-database-url-here
+heroku config:set DATABASE_USERNAME=your-database-username
+heroku config:set DATABASE_PASSWORD=your-database-password
 heroku config:set JWT_SECRET=your-super-secret-jwt-key-here
 
 # Deploy
