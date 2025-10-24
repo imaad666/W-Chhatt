@@ -1,7 +1,5 @@
 package com.chatapp.controller;
 
-import com.chatapp.dto.MessageDto;
-import com.chatapp.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -9,6 +7,9 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import com.chatapp.dto.MessageDto;
+import com.chatapp.service.MessageService;
 
 @Controller
 public class WebSocketController {
@@ -22,7 +23,14 @@ public class WebSocketController {
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public MessageDto sendMessage(@Payload MessageDto messageDto, SimpMessageHeaderAccessor headerAccessor) {
-        String username = headerAccessor.getUser().getName();
+        String username = "Anonymous";
+        var user = headerAccessor.getUser();
+        if (user != null) {
+            var userName = user.getName();
+            if (userName != null) {
+                username = userName;
+            }
+        }
         MessageDto savedMessage = messageService.saveMessage(messageDto, username);
         
         // Send to specific room
@@ -35,8 +43,11 @@ public class WebSocketController {
     @SendTo("/topic/public")
     public MessageDto addUser(@Payload MessageDto messageDto, SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", messageDto.getUsername());
-        headerAccessor.getSessionAttributes().put("roomId", messageDto.getRoomId());
+        var sessionAttributes = headerAccessor.getSessionAttributes();
+        if (sessionAttributes != null) {
+            sessionAttributes.put("username", messageDto.getUsername());
+            sessionAttributes.put("roomId", messageDto.getRoomId());
+        }
         
         // Send join message to room
         MessageDto joinMessage = new MessageDto();
@@ -51,8 +62,14 @@ public class WebSocketController {
     
     @MessageMapping("/chat.leaveUser")
     public void leaveUser(SimpMessageHeaderAccessor headerAccessor) {
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-        Long roomId = (Long) headerAccessor.getSessionAttributes().get("roomId");
+        String username = null;
+        Long roomId = null;
+        
+        var sessionAttributes = headerAccessor.getSessionAttributes();
+        if (sessionAttributes != null) {
+            username = (String) sessionAttributes.get("username");
+            roomId = (Long) sessionAttributes.get("roomId");
+        }
         
         if (username != null && roomId != null) {
             MessageDto leaveMessage = new MessageDto();
