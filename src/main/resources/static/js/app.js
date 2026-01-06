@@ -260,6 +260,7 @@ function clearForm(formType) {
 function showAuthSection() {
     document.getElementById('auth-section').style.display = 'flex';
     document.getElementById('chat-section').style.display = 'none';
+    document.getElementById('demo-section').style.display = 'none';
 }
 
 function showChatSection() {
@@ -267,6 +268,7 @@ function showChatSection() {
     console.log('currentUser:', currentUser);
 
     document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('demo-section').style.display = 'none';
     document.getElementById('chat-section').style.display = 'flex';
 
     const currentUserElement = document.getElementById('current-user');
