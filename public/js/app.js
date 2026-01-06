@@ -741,8 +741,10 @@ function showDemoRoom(roomId) {
     // Update active room in sidebar
     document.querySelectorAll('.room-item').forEach(item => {
         item.classList.remove('active');
+        if (item.textContent.includes(roomInfo.name)) {
+            item.classList.add('active');
+        }
     });
-    event?.target?.closest('.room-item')?.classList.add('active');
     
     // Display messages
     const messagesContainer = document.getElementById('demo-chat-messages');
