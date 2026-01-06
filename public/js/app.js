@@ -676,4 +676,102 @@ document.addEventListener('click', function (event) {
         menu.classList.remove('show');
         btn.classList.remove('active');
     }
-}); 
+});
+
+// Demo Functions
+const demoMessages = {
+    general: [
+        { username: 'alice', content: 'Hey everyone! Welcome to W Chhatt 👋', timestamp: '2:30 PM', type: 'CHAT' },
+        { username: 'bob', content: 'This looks amazing! Love the design', timestamp: '2:31 PM', type: 'CHAT' },
+        { username: 'charlie', content: 'Anyone up for a chat?', timestamp: '2:32 PM', type: 'CHAT' },
+        { username: 'diana', content: 'The UI is so clean and modern!', timestamp: '2:33 PM', type: 'CHAT' },
+        { username: 'System', content: 'eve joined the chat', timestamp: '2:34 PM', type: 'SYSTEM' },
+        { username: 'eve', content: 'Hello! Just discovered this app', timestamp: '2:35 PM', type: 'CHAT' },
+        { username: 'alice', content: 'Welcome eve! Feel free to explore', timestamp: '2:36 PM', type: 'CHAT' }
+    ],
+    tech: [
+        { username: 'dev_master', content: 'Anyone working on Spring Boot projects?', timestamp: '1:15 PM', type: 'CHAT' },
+        { username: 'code_wizard', content: 'Yes! Just finished a WebSocket implementation', timestamp: '1:16 PM', type: 'CHAT' },
+        { username: 'dev_master', content: 'Nice! WebSockets are perfect for real-time chat', timestamp: '1:17 PM', type: 'CHAT' },
+        { username: 'tech_guru', content: 'What about security? JWT tokens?', timestamp: '1:18 PM', type: 'CHAT' },
+        { username: 'code_wizard', content: 'Yep, using JWT for authentication here', timestamp: '1:19 PM', type: 'CHAT' },
+        { username: 'System', content: 'newbie_dev joined the chat', timestamp: '1:20 PM', type: 'SYSTEM' },
+        { username: 'newbie_dev', content: 'Learning a lot from you all!', timestamp: '1:21 PM', type: 'CHAT' }
+    ],
+    random: [
+        { username: 'fun_guy', content: 'What\'s everyone up to today?', timestamp: '3:00 PM', type: 'CHAT' },
+        { username: 'chill_vibes', content: 'Just vibing and coding 🎵', timestamp: '3:01 PM', type: 'CHAT' },
+        { username: 'fun_guy', content: 'Same here! What are you building?', timestamp: '3:02 PM', type: 'CHAT' },
+        { username: 'chill_vibes', content: 'A chat app actually 😄', timestamp: '3:03 PM', type: 'CHAT' },
+        { username: 'fun_guy', content: 'Haha nice! Meta', timestamp: '3:04 PM', type: 'CHAT' }
+    ]
+};
+
+const demoRoomInfo = {
+    general: { name: 'General', members: 12 },
+    tech: { name: 'Tech Talk', members: 8 },
+    random: { name: 'Random', members: 5 }
+};
+
+function showDemo() {
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('chat-section').style.display = 'none';
+    document.getElementById('demo-section').style.display = 'flex';
+    
+    // Show default room (general)
+    showDemoRoom('general');
+}
+
+function closeDemo() {
+    document.getElementById('demo-section').style.display = 'none';
+    document.getElementById('auth-section').style.display = 'flex';
+    hideAuthForm();
+}
+
+function showDemoRoom(roomId) {
+    const roomInfo = demoRoomInfo[roomId];
+    const messages = demoMessages[roomId];
+    
+    // Update room header
+    document.getElementById('demo-room-name').textContent = roomInfo.name;
+    document.getElementById('demo-room-participants').textContent = `${roomInfo.members} members`;
+    
+    // Update active room in sidebar
+    document.querySelectorAll('.room-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    event?.target?.closest('.room-item')?.classList.add('active');
+    
+    // Display messages
+    const messagesContainer = document.getElementById('demo-chat-messages');
+    messagesContainer.innerHTML = '';
+    
+    messages.forEach(message => {
+        const messageElement = document.createElement('div');
+        messageElement.className = message.type === 'SYSTEM' ? 'message system-message' : 'message';
+        
+        if (message.type === 'SYSTEM') {
+            messageElement.innerHTML = `
+                <div class="message-content">
+                    <span class="system-text">${message.content}</span>
+                    <span class="message-time">${message.timestamp}</span>
+                </div>
+            `;
+        } else {
+            messageElement.innerHTML = `
+                <div class="message-header">
+                    <span class="message-username">${message.username}</span>
+                    <span class="message-time">${message.timestamp}</span>
+                </div>
+                <div class="message-content">
+                    <p>${message.content}</p>
+                </div>
+            `;
+        }
+        
+        messagesContainer.appendChild(messageElement);
+    });
+    
+    // Scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+} 
